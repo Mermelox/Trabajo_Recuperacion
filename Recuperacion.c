@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define NUM_BOXEADORES 6
+#define MAX_NOMBRE 30
 
 // Función para validar la entrada de puntos
 int validarEntrada(char *entrada) {
@@ -16,11 +18,19 @@ int validarEntrada(char *entrada) {
 int main() {
     int puntos[NUM_BOXEADORES];
     char entrada[10];
+    char nombres[NUM_BOXEADORES][MAX_NOMBRE];
 
-    // Combates predefinidos
-    printf("Ingrese los puntos de los boxeadores:\n");
+    // Ingreso de nombres de los boxeadores
+    printf("Ingrese los nombres de los boxeadores:\n");
     for (int i = 0; i < NUM_BOXEADORES; i++) {
         printf("Boxeador %d: ", i + 1);
+        scanf("%s", nombres[i]);
+    }
+
+    // Ingreso de puntos de los boxeadores
+    printf("\nIngrese los puntos de los boxeadores:\n");
+    for (int i = 0; i < NUM_BOXEADORES; i++) {
+        printf("%s: ", nombres[i]);
         scanf("%s", entrada);
         
         // Validar la entrada
@@ -52,7 +62,7 @@ int main() {
 
     // Mostrar los resultados
     printf("\nFinalistas:\n");
-    printf("Boxeador %d con %d puntos\n", finalistas[0] + 1, puntos[finalistas[0]]);
+    printf("%s con %d puntos\n", nombres[finalistas[0]], puntos[finalistas[0]]);
     
     return 0;
 }
