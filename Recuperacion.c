@@ -5,21 +5,15 @@
 #define NUM_BOXEADORES 6
 #define MAX_NOMBRE 30
 
-// Función para validar la entrada de puntos
 int validarEntrada(char *entrada) {
     for (int i = 0; entrada[i] != '\0'; i++) {
-        if (entrada[i] < '0' || entrada[i] > '9') {
-            return 0;
-        }
+        if (entrada[i] < '0' || entrada[i] > '9') return 0;
     }
     return 1;
 }
 
-// Función para validar nombres
 int validarNombre(char *nombre) {
-    if (strlen(nombre) == 0) {
-        return 0;
-    }
+    if (strlen(nombre) == 0) return 0;
     for (int i = 0; nombre[i] != '\0'; i++) {
         if (!((nombre[i] >= 'A' && nombre[i] <= 'Z') || (nombre[i] >= 'a' && nombre[i] <= 'z'))) {
             return 0;
@@ -28,12 +22,9 @@ int validarNombre(char *nombre) {
     return 1;
 }
 
-// Función para verificar si un nombre ya fue ingresado
 int nombreRepetido(char nombres[][MAX_NOMBRE], int cantidad, char *nuevo) {
     for (int i = 0; i < cantidad; i++) {
-        if (strcmp(nombres[i], nuevo) == 0) {
-            return 1;
-        }
+        if (strcmp(nombres[i], nuevo) == 0) return 1;
     }
     return 0;
 }
@@ -43,13 +34,10 @@ int main() {
     char entrada[10];
     char nombres[NUM_BOXEADORES][MAX_NOMBRE];
 
-    // Ingreso de nombres de los boxeadores
     printf("Ingrese los nombres de los boxeadores:\n");
     for (int i = 0; i < NUM_BOXEADORES; i++) {
         printf("Boxeador %d: ", i + 1);
         scanf("%s", nombres[i]);
-
-        // Validar nombre y que no esté repetido
         while (!validarNombre(nombres[i]) || nombreRepetido(nombres, i, nombres[i])) {
             if (!validarNombre(nombres[i])) {
                 printf("Nombre inválido. Ingrese un nombre válido: ");
@@ -60,44 +48,48 @@ int main() {
         }
     }
 
-    // Ingreso de puntos de los boxeadores
     printf("\nIngrese los puntos de los boxeadores:\n");
     for (int i = 0; i < NUM_BOXEADORES; i++) {
         printf("%s: ", nombres[i]);
         scanf("%s", entrada);
-
         while (!validarEntrada(entrada)) {
             printf("Entrada inválida. Ingrese un número entero positivo: ");
             scanf("%s", entrada);
         }
-
         puntos[i] = atoi(entrada);
     }
 
-    // Primera ronda: 3 combates
-    int ganadores_primera[3];
+    printf("\n--- Primera ronda ---\n");
+    int ganadores[3];
     for (int i = 0; i < 3; i++) {
         int a = i * 2;
         int b = a + 1;
-        ganadores_primera[i] = (puntos[a] > puntos[b]) ? a : b;
+        int ganador = (puntos[a] > puntos[b]) ? a : b;
+        ganadores[i] = ganador;
+        printf("%s (%d) vs %s (%d) → Gana %s\n", nombres[a], puntos[a], nombres[b], puntos[b], nombres[ganador]);
     }
 
-    // Semifinal y final
-    int semifinalista1 = ganadores_primera[0];
-    int semifinalista2 = ganadores_primera[1];
-    int ganador_semifinal = (puntos[semifinalista1] > puntos[semifinalista2]) ? semifinalista1 : semifinalista2;
-    int finalista = ganadores_primera[2];
+    printf("\n--- Segunda ronda ---\n");
+    int semi1 = ganadores[0];
+    int semi2 = ganadores[1];
+    int finalista1 = (puntos[semi1] > puntos[semi2]) ? semi1 : semi2;
+    int semifinalista = (semi1 == finalista1) ? semi2 : semi1;
+    printf("%s (%d) vs %s (%d) → Gana %s\n", nombres[semi1], puntos[semi1], nombres[semi2], puntos[semi2], nombres[finalista1]);
 
-    int campeon = (puntos[ganador_semifinal] > puntos[finalista]) ? ganador_semifinal : finalista;
-    int subcampeon = (campeon == ganador_semifinal) ? finalista : ganador_semifinal;
-    int semifinalista = (semifinalista1 == ganador_semifinal) ? semifinalista2 : semifinalista1;
+    int finalista2 = ganadores[2];
+    printf("%s (%d) espera para la final\n", nombres[finalista2], puntos[finalista2]);
 
-    // Mostrar resultados
-    printf("\nResultados del torneo:\n");
-    printf("Campeón: %s con %d puntos\n", nombres[campeon], puntos[campeon]);
-    printf("Finalista: %s con %d puntos\n", nombres[subcampeon], puntos[subcampeon]);
-    printf("Semifinalista: %s con %d puntos\n", nombres[semifinalista], puntos[semifinalista]);
+    printf("\n--- Final ---\n");
+    int campeon = (puntos[finalista1] > puntos[finalista2]) ? finalista1 : finalista2;
+    int subcampeon = (campeon == finalista1) ? finalista2 : finalista1;
+    printf("%s (%d) vs %s (%d) → Campeón: %s\n", nombres[finalista1], puntos[finalista1], nombres[finalista2], puntos[finalista2], nombres[campeon]);
+
+    printf("\n=== Resultados del torneo ===\n");
+    printf("🏆 Campeón: %s con %d puntos\n", nombres[campeon], puntos[campeon]);
+    printf("🥈 Finalista: %s con %d puntos\n", nombres[subcampeon], puntos[subcampeon]);
+    printf("🥉 Semifinalista: %s con %d puntos\n", nombres[semifinalista], puntos[semifinalista]);
 
     return 0;
 }
+
 
