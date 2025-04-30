@@ -5,19 +5,10 @@
 #define NUM_BOXEADORES 6
 #define MAX_NOMBRE 30
 
-// Función para obtener el índice del ganador entre dos boxeadores
-int obtenerGanador(int idx1, int idx2, int *puntos) {
-    if (puntos[idx1] > puntos[idx2]) {
-        return idx1;
-    } else {
-        return idx2;
-    }
-}
-
 int main() {
     int puntos[NUM_BOXEADORES];
-    char entrada[10];
     char nombres[NUM_BOXEADORES][MAX_NOMBRE];
+    char entrada[10];
 
     // Ingreso de nombres de los boxeadores
     printf("Ingrese los nombres de los boxeadores:\n");
@@ -29,15 +20,15 @@ int main() {
             scanf("%s", nombres[i]);
 
             valido = 1;
-            int j;
-            for (j = 0; nombres[i][j] != '\0'; j++) {
-                if (!((nombres[i][j] >= 'A' && nombres[i][j] <= 'Z') || (nombres[i][j] >= 'a' && nombres[i][j] <= 'z'))) {
+            for (int j = 0; nombres[i][j] != '\0'; j++) {
+                if (!((nombres[i][j] >= 'A' && nombres[i][j] <= 'Z') || 
+                      (nombres[i][j] >= 'a' && nombres[i][j] <= 'z'))) {
                     valido = 0;
                     break;
                 }
             }
 
-            if (j == 0) {
+            if (strlen(nombres[i]) == 0) {
                 valido = 0;
             }
 
@@ -57,15 +48,14 @@ int main() {
             scanf("%s", entrada);
 
             valido = 1;
-            int j;
-            for (j = 0; entrada[j] != '\0'; j++) {
+            for (int j = 0; entrada[j] != '\0'; j++) {
                 if (entrada[j] < '0' || entrada[j] > '9') {
                     valido = 0;
                     break;
                 }
             }
 
-            if (j == 0) {
+            if (strlen(entrada) == 0) {
                 valido = 0;
             }
 
@@ -78,20 +68,17 @@ int main() {
     }
 
     // Primera ronda: 3 combates entre pares
-    int ganadores[3];
-    for (int i = 0; i < 3; i++) {
-        int idx1 = i * 2;
-        int idx2 = idx1 + 1;
-        ganadores[i] = obtenerGanador(idx1, idx2, puntos);
-    }
+    int ganador1 = (puntos[0] > puntos[1]) ? 0 : 1;
+    int ganador2 = (puntos[2] > puntos[3]) ? 2 : 3;
+    int ganador3 = (puntos[4] > puntos[5]) ? 4 : 5;
 
     // Segunda ronda: semifinal y final
-    int semifinal = obtenerGanador(ganadores[0], ganadores[1], puntos);
-    int finalista = ganadores[2];
-    int campeon = obtenerGanador(semifinal, finalista, puntos);
+    int semifinal = (puntos[ganador1] > puntos[ganador2]) ? ganador1 : ganador2;
+    int finalista = ganador3;
+    int campeon = (puntos[semifinal] > puntos[finalista]) ? semifinal : finalista;
 
     int subcampeon = (campeon == semifinal) ? finalista : semifinal;
-    int semifinalista = (semifinal == ganadores[0]) ? ganadores[1] : ganadores[0];
+    int semifinalista = (semifinal == ganador1) ? ganador2 : ganador1;
 
     // Resultados
     printf("\nResultados del torneo:\n");
