@@ -15,6 +15,19 @@ int validarEntrada(char *entrada) {
     return 1; // Retorna 1 si la entrada es válida
 }
 
+// Función para validar nombres
+int validarNombre(char *nombre) {
+    if (strlen(nombre) == 0) {
+        return 0; // Retorna 0 si el nombre está vacío
+    }
+    for (int i = 0; nombre[i] != '\0'; i++) {
+        if (!((nombre[i] >= 'A' && nombre[i] <= 'Z') || (nombre[i] >= 'a' && nombre[i] <= 'z'))) {
+            return 0; // Retorna 0 si hay un carácter no válido
+        }
+    }
+    return 1; // Retorna 1 si el nombre es válido
+}
+
 int main() {
     int puntos[NUM_BOXEADORES];
     char entrada[10];
@@ -25,6 +38,12 @@ int main() {
     for (int i = 0; i < NUM_BOXEADORES; i++) {
         printf("Boxeador %d: ", i + 1);
         scanf("%s", nombres[i]);
+        
+        // Validar el nombre
+        while (!validarNombre(nombres[i])) {
+            printf("Nombre inválido. Ingrese un nombre válido: ");
+            scanf("%s", nombres[i]);
+        }
     }
 
     // Ingreso de puntos de los boxeadores
@@ -39,7 +58,8 @@ int main() {
             scanf("%s", entrada);
         }
         
-        puntos[i] = atoi(entrada); // Convertir la entrada a entero
+        // Convertir la entrada a entero usando strtol
+        puntos[i] = (int)strtol(entrada, NULL, 10); // Convertir la entrada a entero
     }
 
     // Determinar los ganadores de cada combate
