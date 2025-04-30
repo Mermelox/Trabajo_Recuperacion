@@ -66,28 +66,35 @@ int main() {
         int b = a + 1;
         int ganador = (puntos[a] > puntos[b]) ? a : b;
         ganadores[i] = ganador;
-        printf("%s (%d) vs %s (%d) → Gana %s\n", nombres[a], puntos[a], nombres[b], puntos[b], nombres[ganador]);
+        printf("Pelea %d: %s (%d) vs %s (%d) → Ganador: %s\n",
+               i + 1, nombres[a], puntos[a], nombres[b], puntos[b], nombres[ganador]);
     }
 
-    printf("\n--- Segunda ronda ---\n");
-    int semi1 = ganadores[0];
-    int semi2 = ganadores[1];
-    int finalista1 = (puntos[semi1] > puntos[semi2]) ? semi1 : semi2;
-    int semifinalista = (semi1 == finalista1) ? semi2 : semi1;
-    printf("%s (%d) vs %s (%d) → Gana %s\n", nombres[semi1], puntos[semi1], nombres[semi2], puntos[semi2], nombres[finalista1]);
+    // Elegir los 2 ganadores con más puntos para la final
+    int f1 = ganadores[0], f2 = ganadores[1], f3 = ganadores[2];
 
-    int finalista2 = ganadores[2];
-    printf("%s (%d) espera para la final\n", nombres[finalista2], puntos[finalista2]);
+    // Ordenar los ganadores para encontrar los dos con más puntos
+    int first, second;
+    if (puntos[f1] >= puntos[f2] && puntos[f1] >= puntos[f3]) {
+        first = f1;
+        second = (puntos[f2] > puntos[f3]) ? f2 : f3;
+    } else if (puntos[f2] >= puntos[f1] && puntos[f2] >= puntos[f3]) {
+        first = f2;
+        second = (puntos[f1] > puntos[f3]) ? f1 : f3;
+    } else {
+        first = f3;
+        second = (puntos[f1] > puntos[f2]) ? f1 : f2;
+    }
 
     printf("\n--- Final ---\n");
-    int campeon = (puntos[finalista1] > puntos[finalista2]) ? finalista1 : finalista2;
-    int subcampeon = (campeon == finalista1) ? finalista2 : finalista1;
-    printf("%s (%d) vs %s (%d) → Campeón: %s\n", nombres[finalista1], puntos[finalista1], nombres[finalista2], puntos[finalista2], nombres[campeon]);
+    printf("%s (%d) vs %s (%d)\n", nombres[first], puntos[first], nombres[second], puntos[second]);
+
+    int campeon = (puntos[first] > puntos[second]) ? first : second;
+    int subcampeon = (campeon == first) ? second : first;
 
     printf("\n=== Resultados del torneo ===\n");
     printf("🏆 Campeón: %s con %d puntos\n", nombres[campeon], puntos[campeon]);
     printf("🥈 Finalista: %s con %d puntos\n", nombres[subcampeon], puntos[subcampeon]);
-    printf("🥉 Semifinalista: %s con %d puntos\n", nombres[semifinalista], puntos[semifinalista]);
 
     return 0;
 }
